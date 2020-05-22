@@ -55,7 +55,7 @@ export function ImportData({ data, setData }) {
 
     return (
         <FormSection title="1. Import data" isDragging={isDragging} onIsDraggingChanged={setIsDragging} onDrop={onDrop}>
-            <p>Paste the JSON data, or drop a file from your computer, or select a file from here</p>
+            <p>Paste the JSON data, or drop a file from your computer, or select a file</p>
 
             <form>
                 <div className={`drag-drop-placeholder ${isDragging ? 'drag-drop-placeholder--dragging' : ''}`}>
