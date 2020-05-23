@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { FormSection } from './FormSection';
+import JSON5 from 'json5';
 
 async function readFile(file) {
     return new Promise((resolve, reject) => {
@@ -7,7 +8,7 @@ async function readFile(file) {
         reader.readAsText(file);
         reader.onloadend = function() {
             try {
-                resolve(JSON.parse(reader.result));
+                resolve(JSON5.parse(reader.result));
             } catch (exception) {
                 reject({ name: 'Data format not recognized', message: 'Please make sure to pass valid JSON' });
             }
@@ -29,6 +30,7 @@ export function ImportData({ data, setData }) {
 
     async function onFileInputChange(event) {
         try {
+            setError(null);
             setData(await readFile(event.target.files[0]));
         } catch (exception) {
             setError(exception.message);
@@ -38,6 +40,7 @@ export function ImportData({ data, setData }) {
     async function onDrop(dataTransfer) {
         if (dataTransfer.files.length > 0) {
             try {
+                setError(null);
                 setData(await readFile(dataTransfer.files[0]));
             } catch (exception) {
                 setError(exception.message);
