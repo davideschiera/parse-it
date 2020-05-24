@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { FormSection } from './FormSection';
 import { DestinationOptionsContext } from './DestinationOptions';
-import * as Fuse from 'fuse.js';
+import { JsonTree } from './JsonTree';
+import { TextList } from './TextList';
 
 export function ParametersConfiguration({ data, parameters, onParametersChange }) {
     function addParameterSet(event) {
@@ -30,8 +31,8 @@ export function ParametersConfiguration({ data, parameters, onParametersChange }
                 <button type="submit" disabled style={{ display: 'none' }} aria-hidden="true" />
 
                 <div className="fieldset">
-                    <label>Key</label>
-                    <label>Destination</label>
+                    <label>Key (*)</label>
+                    <label>Destination (*)</label>
                     <label>Mapping</label>
                     <label>Filter</label>
                 </div>
@@ -124,81 +125,5 @@ function SuggestiveInput({ value, onChange, children }) {
                 {isExpanded ? children({ value, onChange }) : null}
             </div>
         </div>
-    );
-}
-
-function TextList({ items, filter, onSelect }) {
-    let matches = items;
-    if (filter) {
-        const fuse = new Fuse.default(items, { includeScore: true });
-        const result = fuse.search(filter);
-
-        matches = result
-            .sort((a, b) => {
-                if (a.score !== b.score) {
-                    return a.score - b.score;
-                } else {
-                    return a.refIndex - b.refIndex;
-                }
-            })
-            .map((result) => result.item);
-    }
-
-    return (
-        <ul className="TextList">
-            {matches.map((item, i) => (
-                <li key={i} onClick={() => onSelect(item)}>
-                    {item}
-                </li>
-            ))}
-        </ul>
-    );
-}
-
-function JsonTree({ data, onSelect }) {
-    if (data) {
-        const keys = Object.keys(data);
-
-        return (
-            <ul className="JsonTree">
-                {keys.map((key, i) => (
-                    <JsonElement key={i} data={data} dataKey={key} onSelect={onSelect} />
-                ))}
-            </ul>
-        );
-    } else {
-        return null;
-    }
-}
-
-function JsonElement({ data, dataKey, onSelect }) {
-    const datum = data[dataKey];
-    let face;
-    let keys;
-    if (datum === null) {
-        face = `${dataKey}: null`;
-        face = 'null';
-    } else if (datum === undefined) {
-        face = `${dataKey}: undefined`;
-        face = 'undefined';
-    } else if (Array.isArray(datum)) {
-        face = `${dataKey} (array)`;
-        keys = Object.keys(datum);
-    } else if (typeof datum === 'object') {
-        face = `${dataKey} (object)`;
-        keys = Object.keys(datum);
-    } else {
-        face = `${dataKey}: ${datum.toString()}`;
-    }
-
-    return (
-        <li className="JsonElement">
-            <div className="JsonElement__Face" onClick={() => onSelect(dataKey)}>
-                {face}
-            </div>
-            {keys ? (
-                <JsonTree data={datum} parent={dataKey} onSelect={(path) => onSelect(`${dataKey}.${path}`)} />
-            ) : null}
-        </li>
     );
 }
