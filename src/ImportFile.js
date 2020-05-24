@@ -83,7 +83,7 @@ export function ImportData({ data, setData }) {
                 {error ? (
                     <p>
                         <span role="img" aria-label="Import error">
-                            ⚠️
+                            🛑
                         </span>{' '}
                         {error}
                     </p>

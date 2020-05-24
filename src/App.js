@@ -4,6 +4,7 @@ import React, { useState, Fragment } from 'react';
 import { ImportData } from './ImportFile';
 import { ParametersConfiguration } from './ParametersConfiguration';
 import { ParserGenerator } from './ParserGenerator';
+import { DestinationOptions } from './DestinationOptions';
 
 export function App() {
     const [data, setData] = useState(null);
@@ -15,7 +16,9 @@ export function App() {
 
             <ImportData data={data} setData={setData} />
 
-            <ParametersConfiguration parameters={parameters} onParametersChange={setParameters} />
+            <DestinationOptions>
+                <ParametersConfiguration data={data} parameters={parameters} onParametersChange={setParameters} />
+            </DestinationOptions>
 
             <ParserGenerator data={data} parameters={parameters} />
         </Fragment>

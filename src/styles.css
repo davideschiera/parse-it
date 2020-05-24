@@ -17,7 +17,33 @@ form {
 .fieldset {
     display: grid;
     grid-template-columns: repeat(4, 1fr) 80px;
+    align-items: flex-start;
     grid-gap: 20px;
+}
+
+.SuggestiveInput {
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    grid-template-areas:
+        'input button'
+        'suggestions suggestions';
+}
+.SuggestiveInput__Suggestions {
+    grid-area: suggestions;
+
+    display: none;
+
+    height: 140px;
+    overflow: auto;
+
+    border: 1px solid black;
+}
+.SuggestiveInput__Suggestions--IsExpanded {
+    display: block;
+}
+
+button.SuggestiveInput {
+    text-align: center;
 }
 
 section {
@@ -54,4 +80,26 @@ textarea {
 
 .drag-drop-placeholder.drag-drop-placeholder--dragging {
     opacity: 1;
+}
+
+.TextList {
+    list-style: none;
+    margin: 0;
+    padding-inline-start: 0;
+}
+
+.JsonTree {
+    list-style: none;
+    margin: 0;
+    padding-inline-start: 0;
+
+    overflow: hidden;
+}
+
+.JsonElement {
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
 }
