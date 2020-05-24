@@ -75,7 +75,13 @@ function ParameterConfiguration({ parameter, data, onChange, onRemove }) {
     return (
         <div className="fieldset">
             <SuggestiveInput value={parameter.key} onChange={changeParameter.bind(null, 'key')}>
-                {({ value, onChange }) => <JsonTree data={data} filter={value} onSelect={onChange} />}
+                {({ value, onChange }) => (
+                    <JsonTree
+                        data={data}
+                        filter={value}
+                        onSelect={(value) => onChange(['jsonParsed', ...value.split('.').slice(2)].join('.'))}
+                    />
+                )}
             </SuggestiveInput>
 
             <SuggestiveInput value={parameter.destination} onChange={changeParameter.bind(null, 'destination')}>

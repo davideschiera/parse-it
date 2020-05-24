@@ -8,7 +8,9 @@ async function readFile(file) {
         reader.readAsText(file);
         reader.onloadend = function() {
             try {
-                resolve(JSON5.parse(reader.result));
+                const lines = reader.result.split('\n');
+
+                resolve({ root: lines.map(JSON5.parse) });
             } catch (exception) {
                 reject({ name: 'Data format not recognized', message: 'Please make sure to pass valid JSON' });
             }

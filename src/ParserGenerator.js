@@ -9,17 +9,35 @@ export function ParserGenerator({ data, parameters }) {
     function generate(event) {
         event.preventDefault();
 
-        setParser(createParser(data, parameters));
+        try {
+            setParser(createParser(data, parameters));
+        } catch (exception) {}
+    }
+
+    function verify(event) {
+        event.preventDefault();
+
+        try {
+            // send data + parser to API
+        } catch (exception) {}
     }
 
     function download(event) {
         event.preventDefault();
 
-        const url = window.URL.createObjectURL(new Blob([parser], { type: 'text/plain' }));
+        const url = window.URL.createObjectURL(new Blob([parser], { type: 'application/javascript' }));
         linkRef.current.href = url;
-        linkRef.current.download = 'parser.txt';
+        linkRef.current.download = 'parser.js';
         linkRef.current.click();
         window.URL.revokeObjectURL(url);
+    }
+
+    function submit(event) {
+        event.preventDefault();
+
+        try {
+            // send data + parser to API
+        } catch (exception) {}
     }
 
     return (
@@ -32,10 +50,15 @@ export function ParserGenerator({ data, parameters }) {
 
                 <textarea readOnly value={parser || ''} />
 
+                <button onClick={verify}>Verify</button>
+
                 {/* eslint-disable-next-line  */}
                 <a ref={linkRef} style={{ display: 'none' }} />
 
                 <button onClick={download}>Download</button>
+                <button onClick={submit} disabled>
+                    Submit
+                </button>
             </form>
         </FormSection>
     );
