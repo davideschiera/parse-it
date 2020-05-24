@@ -14,11 +14,20 @@ export function ParserGenerator({ data, parameters }) {
         } catch (exception) {}
     }
 
-    function verify(event) {
+    async function verify(event) {
         event.preventDefault();
 
         try {
             // send data + parser to API
+            const response = await fetch('/api/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data, parameters, parser })
+            });
+
+            const responseJson = await response.json();
         } catch (exception) {}
     }
 
@@ -32,11 +41,20 @@ export function ParserGenerator({ data, parameters }) {
         window.URL.revokeObjectURL(url);
     }
 
-    function submit(event) {
+    async function submit(event) {
         event.preventDefault();
 
         try {
             // send data + parser to API
+            const response = await fetch('/api/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data, parameters, parser })
+            });
+
+            const responseJson = await response.json();
         } catch (exception) {}
     }
 
