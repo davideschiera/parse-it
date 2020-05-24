@@ -4,9 +4,19 @@ import { DestinationOptionsContext } from './DestinationOptions';
 import { JsonTree } from './JsonTree';
 import { TextList } from './TextList';
 
+export const MAPPING_DEFAULT = 'STATIC';
+const MAPPING_DEFAULT_TEXT = 'Static';
+const MAPPING_FOO = 'FOO';
+const MAPPING_FOO_TEXT = 'Foo';
+const MAPPING_BAR = 'BAR';
+const MAPPING_BAR_TEXT = 'Bar';
+
 export function ParametersConfiguration({ data, parameters, onParametersChange }) {
     function addParameterSet(event) {
-        onParametersChange([...parameters, { key: null, destination: null, mapping: null, filter: null }]);
+        onParametersChange([
+            ...parameters,
+            { key: null, destination: null, mapping: MAPPING_DEFAULT, mappingData: null, filter: null }
+        ]);
 
         event.preventDefault();
     }
@@ -30,7 +40,7 @@ export function ParametersConfiguration({ data, parameters, onParametersChange }
                 {/*Prevent implicit submission of the form*/}
                 <button type="submit" disabled style={{ display: 'none' }} aria-hidden="true" />
 
-                <div className="fieldset">
+                <div className="ParameterConfiguration__Fieldset">
                     <label>Key (*)</label>
                     <label>Destination (*)</label>
                     <label>Mapping</label>
@@ -74,7 +84,7 @@ function ParameterConfiguration({ parameter, data, onChange, onRemove }) {
     }
 
     return (
-        <div className="fieldset">
+        <div className="ParameterConfiguration__Fieldset">
             <SuggestiveInput value={parameter.key} onChange={changeParameter.bind(null, 'key')}>
                 {({ value, onChange }) => (
                     <JsonTree
@@ -91,7 +101,20 @@ function ParameterConfiguration({ parameter, data, onChange, onRemove }) {
                 )}
             </SuggestiveInput>
 
-            <input type="text" value={parameter.mapping || ''} onChange={onInputChange.bind(null, 'mapping')} />
+            <div className="ParameterConfiguration__MappingFieldset">
+                <select value={parameter.mapping} onChange={onInputChange.bind(null, 'mapping')}>
+                    <option value={MAPPING_DEFAULT}>{MAPPING_DEFAULT_TEXT}</option>
+                    <option value={MAPPING_FOO}>{MAPPING_FOO_TEXT}</option>
+                    <option value={MAPPING_BAR}>{MAPPING_BAR_TEXT}</option>
+                </select>
+                {parameter.mapping === MAPPING_DEFAULT ? (
+                    <input
+                        type="text"
+                        value={parameter.mappingData || ''}
+                        onChange={onInputChange.bind(null, 'mappingData')}
+                    />
+                ) : null}
+            </div>
 
             <input type="text" value={parameter.filter || ''} onChange={onInputChange.bind(null, 'filter')} />
 

@@ -61,7 +61,7 @@ export function ImportData({ data, setData }) {
     return (
         <FormSection title="1. Import data" isDragging={isDragging} onIsDraggingChanged={setIsDragging} onDrop={onDrop}>
             <p>
-                Select, or drag&drop, or past the JSONL data (see{' '}
+                Select, or drag and drop, or past the JSONL data (see{' '}
                 <a href="http://jsonlines.org/">JSON Lines documentation</a>)
             </p>
 
