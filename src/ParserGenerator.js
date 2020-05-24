@@ -7,10 +7,10 @@ import { verifyParser } from './parser/verifyParser';
 export function ParserGenerator({ data, parameters }) {
     const [parser, setParser] = useState(null);
     const linkRef = useRef();
-    const canGenerate = data !== null && Array.isArray(parameters);
-    const canVerify = data !== null && Array.isArray(parameters) && parser !== null;
-    const canDownload = data !== null && Array.isArray(parameters) && parser !== null;
-    const canSubmit = data !== null && Array.isArray(parameters) && parser !== null;
+    const canGenerate = data !== null && parameters.length > 0;
+    const canVerify = data !== null && parameters.length > 0 && parser !== null;
+    const canDownload = canVerify;
+    const canSubmit = canVerify;
 
     function generate(event) {
         event.preventDefault();
@@ -52,23 +52,23 @@ export function ParserGenerator({ data, parameters }) {
                 {/*Prevent implicit submission of the form*/}
                 <button type="submit" disabled style={{ display: 'none' }} aria-hidden="true" />
 
-                <button type="button" onClick={generate} disabled={canGenerate}>
+                <button type="button" onClick={generate} disabled={canGenerate === false}>
                     Generate
                 </button>
 
-                <textarea readOnly value={parser || ''} />
+                <textarea readOnly value={parser || ''} disabled={parser === null} />
 
-                <button type="button" onClick={verify} disabled={canVerify}>
+                <button type="button" onClick={verify} disabled={canVerify === false}>
                     Verify
                 </button>
 
                 {/* eslint-disable-next-line  */}
                 <a ref={linkRef} style={{ display: 'none' }} />
 
-                <button type="button" onClick={download} disabled={canDownload}>
+                <button type="button" onClick={download} disabled={canDownload === false}>
                     Download
                 </button>
-                <button type="button" onClick={submit} disabled={canSubmit}>
+                <button type="button" onClick={submit} disabled={canSubmit === false}>
                     Submit
                 </button>
             </form>
