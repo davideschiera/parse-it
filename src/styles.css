@@ -41,6 +41,8 @@ form {
     display: none;
 
     height: 140px;
+    width: 50vw;
+
     overflow: auto;
 
     border: 1px solid black;
@@ -54,6 +56,8 @@ button.SuggestiveInput {
 }
 
 section {
+    position: relative;
+
     margin-bottom: 80px;
 }
 section.is-dragging * {

@@ -50,18 +50,18 @@ export function ImportData({ data, setData }) {
         }
     }
 
-    function onTextChange(event) {
-        try {
-            setData(event.target.value);
-        } catch {
-            // ignore errors while typing...
-        }
-    }
+    // function onTextChange(event) {
+    //     try {
+    //         setData(event.target.value);
+    //     } catch {
+    //         // ignore errors while typing...
+    //     }
+    // }
 
     return (
         <FormSection title="1. Import data" isDragging={isDragging} onIsDraggingChanged={setIsDragging} onDrop={onDrop}>
             <p>
-                Select, or drag and drop, or past the JSONL data (see{' '}
+                Select, or drag and drop the JSONL data (see{' '}
                 <a href="http://jsonlines.org/">JSON Lines documentation</a>)
             </p>
 
@@ -73,7 +73,7 @@ export function ImportData({ data, setData }) {
                 {/*Prevent implicit submission of the form*/}
                 <button type="submit" disabled style={{ display: 'none' }} aria-hidden="true" />
 
-                <textarea value={data ? JSON.stringify(data, null, 4) : ''} onChange={onTextChange} />
+                {/* <textarea value={data ? JSON.stringify(data, null, 4) : ''} onChange={onTextChange} /> */}
 
                 <input
                     type="file"

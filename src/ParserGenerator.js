@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { FormSection } from './FormSection';
-import { createParser } from './createParser';
+import { createParser } from './parser/createParser';
+import { submitParser } from './parser/submitParser';
+import { verifyParser } from './parser/verifyParser';
 
 export function ParserGenerator({ data, parameters }) {
     const [parser, setParser] = useState(null);
@@ -18,16 +20,15 @@ export function ParserGenerator({ data, parameters }) {
         event.preventDefault();
 
         try {
-            // send data + parser to API
-            const response = await fetch('/api/verify', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ data, parameters, parser })
-            });
+            await verifyParser(data, parameters, parser);
+        } catch (exception) {}
+    }
 
-            const responseJson = await response.json();
+    async function submit(event) {
+        event.preventDefault();
+
+        try {
+            await submitParser(data, parameters, parser);
         } catch (exception) {}
     }
 
@@ -39,23 +40,6 @@ export function ParserGenerator({ data, parameters }) {
         linkRef.current.download = 'parser.js';
         linkRef.current.click();
         window.URL.revokeObjectURL(url);
-    }
-
-    async function submit(event) {
-        event.preventDefault();
-
-        try {
-            // send data + parser to API
-            const response = await fetch('/api/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ data, parameters, parser })
-            });
-
-            const responseJson = await response.json();
-        } catch (exception) {}
     }
 
     return (

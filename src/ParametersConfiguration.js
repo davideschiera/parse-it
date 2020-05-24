@@ -86,18 +86,18 @@ function ParameterConfiguration({ parameter, data, onChange, onRemove }) {
     return (
         <div className="ParameterConfiguration__Fieldset">
             <SuggestiveInput value={parameter.key} onChange={changeParameter.bind(null, 'key')}>
-                {({ value, onChange }) => (
+                {({ value, onSelect }) => (
                     <JsonTree
                         data={data}
                         filter={value}
-                        onSelect={(value) => onChange(['jsonParsed', ...value.split('.').slice(2)].join('.'))}
+                        onSelect={(value) => onSelect(['jsonParsed', ...value.split('.').slice(2)].join('.'))}
                     />
                 )}
             </SuggestiveInput>
 
             <SuggestiveInput value={parameter.destination} onChange={changeParameter.bind(null, 'destination')}>
-                {({ value, onChange }) => (
-                    <TextList items={destinationOptions.data || []} filter={value} onSelect={onChange} />
+                {({ value, onSelect }) => (
+                    <TextList items={destinationOptions.data || []} filter={value} onSelect={onSelect} />
                 )}
             </SuggestiveInput>
 
@@ -107,7 +107,7 @@ function ParameterConfiguration({ parameter, data, onChange, onRemove }) {
                     <option value={MAPPING_FOO}>{MAPPING_FOO_TEXT}</option>
                     <option value={MAPPING_BAR}>{MAPPING_BAR_TEXT}</option>
                 </select>
-                {parameter.mapping === MAPPING_DEFAULT ? (
+                {parameter.mapping !== MAPPING_DEFAULT ? (
                     <input
                         type="text"
                         value={parameter.mappingData || ''}
@@ -124,12 +124,17 @@ function ParameterConfiguration({ parameter, data, onChange, onRemove }) {
 }
 
 function SuggestiveInput({ value, onChange, children }) {
-    const [isExpanded, toggle] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     function onClick(event) {
         event.preventDefault();
 
-        toggle(isExpanded === false);
+        setIsExpanded(isExpanded === false);
+    }
+
+    function onSelect(value) {
+        setIsExpanded(false);
+        onChange(value);
     }
 
     return (
@@ -145,7 +150,7 @@ function SuggestiveInput({ value, onChange, children }) {
                     isExpanded ? 'SuggestiveInput__Suggestions--IsExpanded' : ''
                 }`}
             >
-                {isExpanded ? children({ value, onChange }) : null}
+                {isExpanded ? children({ value, onSelect }) : null}
             </div>
         </div>
     );
