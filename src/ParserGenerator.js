@@ -7,6 +7,10 @@ import { verifyParser } from './parser/verifyParser';
 export function ParserGenerator({ data, parameters }) {
     const [parser, setParser] = useState(null);
     const linkRef = useRef();
+    const canGenerate = data !== null && Array.isArray(parameters);
+    const canVerify = data !== null && Array.isArray(parameters) && parser !== null;
+    const canDownload = data !== null && Array.isArray(parameters) && parser !== null;
+    const canSubmit = data !== null && Array.isArray(parameters) && parser !== null;
 
     function generate(event) {
         event.preventDefault();
@@ -48,17 +52,23 @@ export function ParserGenerator({ data, parameters }) {
                 {/*Prevent implicit submission of the form*/}
                 <button type="submit" disabled style={{ display: 'none' }} aria-hidden="true" />
 
-                <button onClick={generate}>Generate</button>
+                <button type="button" onClick={generate} disabled={canGenerate}>
+                    Generate
+                </button>
 
                 <textarea readOnly value={parser || ''} />
 
-                <button onClick={verify}>Verify</button>
+                <button type="button" onClick={verify} disabled={canVerify}>
+                    Verify
+                </button>
 
                 {/* eslint-disable-next-line  */}
                 <a ref={linkRef} style={{ display: 'none' }} />
 
-                <button onClick={download}>Download</button>
-                <button onClick={submit} disabled>
+                <button type="button" onClick={download} disabled={canDownload}>
+                    Download
+                </button>
+                <button type="button" onClick={submit} disabled={canSubmit}>
                     Submit
                 </button>
             </form>
