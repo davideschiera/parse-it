@@ -1,14 +1,56 @@
 export async function verifyParser(data, parameters, parser) {
-    // send data + parser to API
-    const response = await fetch('/api/verify', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ data, parameters, parser })
+  // send data + parser to API
+  console.log("Starting fetch");
+
+  var rawLogsString = encodeURIComponent(
+    data["root"].map(JSON.stringify).join("\r\n")
+  );
+  var parserString = encodeURIComponent(parser);
+  console.log(
+    [
+      "https://apps.chronicle.security/partner-tools/raw-log-validation",
+      "rawLogs=",
+      rawLogsString,
+      "&config=",
+      parserString
+    ].join("")
+  );
+
+  console.log("Starting fetch");
+  await fetch(
+    [
+      "https://apps.chronicle.security/partner-tools/raw-log-validation",
+      "?rawLogs=",
+      rawLogsString,
+      "&config=",
+      parserString
+    ].join(""),
+    {
+      method: "POST",
+      referrer: "",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }
+  )
+    .then(function(response) {
+      if (!response.ok) {
+        console.log(response.statusText);
+        throw Error(response.statusText);
+      }
+      console.log(response);
+      return response;
+    })
+    .then(function(response) {
+      console.log("ok");
+      return response;
+    })
+    .catch(function(error) {
+      console.log("In error path");
+      console.log(error);
     });
-
-    const responseJson = await response.json();
-
-    return responseJson;
+  //console.log("Finished fetch");
+  //const responseJson = await response();
+  //console.log(responseJson);
+  //return responseJson;
 }

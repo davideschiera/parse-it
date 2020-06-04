@@ -1,157 +1,283 @@
-import React, { useState, useContext } from 'react';
-import { FormSection } from './FormSection';
-import { DestinationOptionsContext } from './DestinationOptions';
-import { JsonTree } from './JsonTree';
-import { TextList } from './TextList';
+import React, { useState, useContext } from "react";
+import { FormSection } from "./FormSection";
+import { DestinationOptionsContext } from "./DestinationOptions";
+import { JsonTree } from "./JsonTree";
+import { TextList } from "./TextList";
 
-export const MAPPING_DEFAULT = 'STATIC';
-const MAPPING_DEFAULT_TEXT = 'Static';
-const MAPPING_FOO = 'FOO';
-const MAPPING_FOO_TEXT = 'Foo';
-const MAPPING_BAR = 'BAR';
-const MAPPING_BAR_TEXT = 'Bar';
+export const MAPPING_DEFAULT = "STATIC";
+const MAPPING_DEFAULT_TEXT = "Static";
+export const MAPPING_DATE = "DATE";
+const MAPPING_DATE_TEXT = "Date";
+export const MAPPING_REPLACE = "REPLACE";
+const MAPPING_REPLACE_TEXT = "Replace";
+export const MAPPING_RENAME = "RENAME";
+const MAPPING_RENAME_TEXT = "Rename";
+export const MAPPING_MERGE = "MERGE";
+const MAPPING_MERGE_TEXT = "Merge";
+export const MAPPING_GROK = "GROK";
+const MAPPING_GROK_TEXT = "Grok";
 
-export function ParametersConfiguration({ data, parameters, onParametersChange }) {
-    function addParameterSet(event) {
-        onParametersChange([
-            ...parameters,
-            { key: null, destination: null, mapping: MAPPING_DEFAULT, mappingData: null, filter: null }
-        ]);
+export const MAPPING_DATE_RFC3339 = "RFC3339";
+export const MAPPING_DATE_UNIX = "UNIX";
+export const MAPPING_DATE_ISO8601 = "ISO8601";
+export const MAPPING_DATE_UNIX_MS = "UNIX_MS";
+export const MAPPING_DATE_ddMMMyyyyHHmmssZ = "dd/MMM/yyyy:HH:mm:ss Z";
+export const MAPPING_DATE_MMMddyyyyHHmmss = "MMM dd yyyy HH:mm:ss";
 
-        event.preventDefault();
-    }
+export const MAPPING_CONVERT_UINTEGER = "uinteger";
+export const MAPPING_CONVERT_IPADDRESS = "ipaddress";
+export const MAPPING_CONVERT_INTEGER = "integer";
+export const MAPPING_CONVERT_STRING = "string";
+export const MAPPING_CONVERT_BOOLEAN = "boolean";
+export const MAPPING_CONVERT_MACADDRESS = "macaddress";
+export const MAPPING_CONVERT_BYTES = "bytes";
+export const MAPPING_CONVERT_HASH = "hash";
+export const MAPPING_CONVERT_DONTCONVERT = "-";
 
-    function changeParameterSet(index, parameter) {
-        onParametersChange([
-            ...parameters.filter((item, i) => i < index),
-            parameter,
-            ...parameters.filter((item, i) => i > index)
-        ]);
-    }
+export function ParametersConfiguration({
+  data,
+  parameters,
+  onParametersChange
+}) {
+  function addParameterSet(event) {
+    onParametersChange([
+      ...parameters,
+      {
+        key: null,
+        destination: null,
+        mapping: MAPPING_DEFAULT,
+        mappingData: null,
+        mappingDateType: MAPPING_DATE_RFC3339,
+        mappingConvertType: MAPPING_CONVERT_DONTCONVERT,
+        filter: null
+      }
+    ]);
 
-    function removeParameterSet(index) {
-        onParametersChange(parameters.filter((item, i) => i !== index));
-    }
+    event.preventDefault();
+  }
 
-    return (
-        <FormSection title="2. Define parameters">
-            <p>Enter the parameters to generate the parser</p>
-            <form>
-                {/*Prevent implicit submission of the form*/}
-                <button type="submit" disabled style={{ display: 'none' }} aria-hidden="true" />
+  function changeParameterSet(index, parameter) {
+    console.log(index);
+    onParametersChange([
+      ...parameters.filter((item, i) => i < index),
+      parameter,
+      ...parameters.filter((item, i) => i > index)
+    ]);
+  }
 
-                <div className="ParameterConfiguration__Fieldset">
-                    <label>Key (*)</label>
-                    <label>Destination (*)</label>
-                    <label>Mapping</label>
-                    <label>Filter</label>
-                </div>
+  function removeParameterSet(index) {
+    onParametersChange(parameters.filter((item, i) => i !== index));
+  }
 
-                {parameters.map((set, index) => (
-                    <ParameterConfiguration
-                        key={index}
-                        data={data}
-                        parameter={set}
-                        onChange={changeParameterSet.bind(null, index)}
-                        onRemove={removeParameterSet.bind(null, index)}
-                    />
-                ))}
+  return (
+    <FormSection title="2. Define parameters">
+      <p>Enter the parameters to generate the parser</p>
+      <form>
+        {/*Prevent implicit submission of the form*/}
+        <button
+          type="submit"
+          disabled
+          style={{ display: "none" }}
+          aria-hidden="true"
+        />
 
-                <button onClick={addParameterSet}>Add</button>
-            </form>
-        </FormSection>
-    );
+        <div className="ParameterConfiguration__Fieldset">
+          <label>Key (*)</label>
+          <label>Destination (*)</label>
+          <label>Mapping</label>
+          <label>Filter</label>
+        </div>
+
+        {parameters.map((set, index) => (
+          <ParameterConfiguration
+            key={index}
+            data={data}
+            parameter={set}
+            onChange={changeParameterSet.bind(null, index)}
+            onRemove={removeParameterSet.bind(null, index)}
+          />
+        ))}
+
+        <button onClick={addParameterSet}>Add</button>
+      </form>
+    </FormSection>
+  );
 }
 
 function ParameterConfiguration({ parameter, data, onChange, onRemove }) {
-    const destinationOptions = useContext(DestinationOptionsContext);
+  const destinationOptions = useContext(DestinationOptionsContext);
 
-    function onInputChange(propName, event) {
-        changeParameter(propName, event.target.value);
-    }
+  function onInputChange(propName, event) {
+    changeParameter(propName, event.target.value);
+  }
 
-    function changeParameter(propName, value) {
-        onChange({
-            ...parameter,
-            [propName]: value !== '' ? value : null
-        });
-    }
+  function changeParameter(propName, value) {
+    onChange({
+      ...parameter,
+      [propName]: value !== "" ? value : null
+    });
+  }
 
-    function onRemoveClick(event) {
-        event.preventDefault();
+  function onRemoveClick(event) {
+    event.preventDefault();
 
-        onRemove();
-    }
+    onRemove();
+  }
 
-    return (
-        <div className="ParameterConfiguration__Fieldset">
-            <SuggestiveInput value={parameter.key} onChange={changeParameter.bind(null, 'key')}>
-                {({ value, onSelect }) => (
-                    <JsonTree
-                        data={data}
-                        filter={value}
-                        onSelect={(value) => onSelect(['jsonParsed', ...value.split('.').slice(2)].join('.'))}
-                    />
-                )}
-            </SuggestiveInput>
+  return (
+    <div className="ParameterConfiguration__Fieldset">
+      <SuggestiveInput
+        value={parameter.key}
+        onChange={changeParameter.bind(null, "key")}
+      >
+        {({ value, onSelect }) => (
+          <JsonTree
+            data={data}
+            filter={value}
+            onSelect={value =>
+              onSelect(
+                value
+                  .split(".")
+                  .slice(2)
+                  .join(".")
+              )
+            }
+          />
+        )}
+      </SuggestiveInput>
 
-            <SuggestiveInput value={parameter.destination} onChange={changeParameter.bind(null, 'destination')}>
-                {({ value, onSelect }) => (
-                    <TextList items={destinationOptions.data || []} filter={value} onSelect={onSelect} />
-                )}
-            </SuggestiveInput>
+      <SuggestiveInput
+        value={parameter.destination}
+        onChange={changeParameter.bind(null, "destination")}
+      >
+        {({ value, onSelect }) => (
+          <TextList
+            items={destinationOptions.data || []}
+            filter={value}
+            onSelect={onSelect}
+          />
+        )}
+      </SuggestiveInput>
 
-            <div className="ParameterConfiguration__MappingFieldset">
-                <select value={parameter.mapping} onChange={onInputChange.bind(null, 'mapping')}>
-                    <option value={MAPPING_DEFAULT}>{MAPPING_DEFAULT_TEXT}</option>
-                    <option value={MAPPING_FOO}>{MAPPING_FOO_TEXT}</option>
-                    <option value={MAPPING_BAR}>{MAPPING_BAR_TEXT}</option>
-                </select>
-                {parameter.mapping !== MAPPING_DEFAULT ? (
-                    <input
-                        type="text"
-                        value={parameter.mappingData || ''}
-                        onChange={onInputChange.bind(null, 'mappingData')}
-                    />
-                ) : null}
-            </div>
+      <div className="ParameterConfiguration__MappingFieldset">
+        <select
+          value={parameter.mapping}
+          onChange={onInputChange.bind(null, "mapping")}
+        >
+          <option value={MAPPING_DEFAULT}>{MAPPING_DEFAULT_TEXT}</option>
+          <option value={MAPPING_DATE}>{MAPPING_DATE_TEXT}</option>
+          <option value={MAPPING_REPLACE}>{MAPPING_REPLACE_TEXT}</option>
+          <option value={MAPPING_RENAME}>{MAPPING_RENAME_TEXT}</option>
+          <option value={MAPPING_MERGE}>{MAPPING_MERGE_TEXT}</option>
+          <option value={MAPPING_GROK}>{MAPPING_GROK_TEXT}</option>
+        </select>
+        {parameter.mapping === MAPPING_GROK ||
+        parameter.mapping === MAPPING_REPLACE ? (
+          <input
+            type="text"
+            value={parameter.mappingData || ""}
+            onChange={onInputChange.bind(null, "mappingData")}
+          />
+        ) : null}
 
-            <input type="text" value={parameter.filter || ''} onChange={onInputChange.bind(null, 'filter')} />
+        {parameter.mapping === MAPPING_DATE ? (
+          <select
+            value={parameter.mappingDateType}
+            onChange={onInputChange.bind(null, "mappingDateType")}
+          >
+            <option value={MAPPING_DATE_RFC3339}>{MAPPING_DATE_RFC3339}</option>
+            <option value={MAPPING_DATE_ISO8601}>{MAPPING_DATE_ISO8601}</option>
+            <option value={MAPPING_DATE_UNIX}>{MAPPING_DATE_UNIX}</option>
+            <option value={MAPPING_DATE_UNIX_MS}>{MAPPING_DATE_UNIX}</option>
+            <option value={MAPPING_DATE_ddMMMyyyyHHmmssZ}>
+              {MAPPING_DATE_ddMMMyyyyHHmmssZ}
+            </option>
+            <option value={MAPPING_DATE_MMMddyyyyHHmmss}>
+              {MAPPING_DATE_MMMddyyyyHHmmss}
+            </option>
+            }
+          </select>
+        ) : null}
+        {parameter.mapping === MAPPING_MERGE ||
+        parameter.mapping === MAPPING_RENAME ? (
+          <select
+            value={parameter.mappingConvertType || "-"}
+            onChange={onInputChange.bind(null, "mappingConvertType")}
+          >
+            <option value={MAPPING_CONVERT_DONTCONVERT}>
+              {MAPPING_CONVERT_DONTCONVERT}
+            </option>
+            <option value={MAPPING_CONVERT_UINTEGER}>
+              {MAPPING_CONVERT_UINTEGER}
+            </option>
+            <option value={MAPPING_CONVERT_BOOLEAN}>
+              {MAPPING_CONVERT_BOOLEAN}
+            </option>
+            <option value={MAPPING_CONVERT_BYTES}>
+              {MAPPING_CONVERT_BYTES}
+            </option>
+            <option value={MAPPING_CONVERT_HASH}>{MAPPING_CONVERT_HASH}</option>
+            <option value={MAPPING_CONVERT_INTEGER}>
+              {MAPPING_CONVERT_INTEGER}
+            </option>
+            <option value={MAPPING_CONVERT_IPADDRESS}>
+              {MAPPING_CONVERT_IPADDRESS}
+            </option>
+            <option value={MAPPING_CONVERT_STRING}>
+              {MAPPING_CONVERT_STRING}
+            </option>
+            <option value={MAPPING_CONVERT_MACADDRESS}>
+              {MAPPING_CONVERT_MACADDRESS}
+            </option>
+            }
+          </select>
+        ) : null}
+      </div>
 
-            <button onClick={onRemoveClick}>Remove</button>
-        </div>
-    );
+      <input
+        type="text"
+        value={parameter.filter || ""}
+        onChange={onInputChange.bind(null, "filter")}
+      />
+
+      <button onClick={onRemoveClick}>Remove</button>
+    </div>
+  );
 }
 
 function SuggestiveInput({ value, onChange, children }) {
-    const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-    function onClick(event) {
-        event.preventDefault();
+  function onClick(event) {
+    event.preventDefault();
 
-        setIsExpanded(isExpanded === false);
-    }
+    setIsExpanded(isExpanded === false);
+  }
 
-    function onSelect(value) {
-        setIsExpanded(false);
-        onChange(value);
-    }
+  function onSelect(value) {
+    setIsExpanded(false);
+    onChange(value);
+  }
 
-    return (
-        <div className="SuggestiveInput">
-            <input type="text" value={value || ''} onChange={(event) => onChange(event.target.value)} />
+  return (
+    <div className="SuggestiveInput">
+      <input
+        type="text"
+        value={value || ""}
+        onChange={event => onChange(event.target.value)}
+      />
 
-            <button className="SuggestiveInput" onClick={onClick}>
-                V
-            </button>
+      <button className="SuggestiveInput" onClick={onClick}>
+        V
+      </button>
 
-            <div
-                className={`SuggestiveInput__Suggestions ${
-                    isExpanded ? 'SuggestiveInput__Suggestions--IsExpanded' : ''
-                }`}
-            >
-                {isExpanded ? children({ value, onSelect }) : null}
-            </div>
-        </div>
-    );
+      <div
+        className={`SuggestiveInput__Suggestions ${
+          isExpanded ? "SuggestiveInput__Suggestions--IsExpanded" : ""
+        }`}
+      >
+        {isExpanded ? children({ value, onSelect }) : null}
+      </div>
+    </div>
+  );
 }
