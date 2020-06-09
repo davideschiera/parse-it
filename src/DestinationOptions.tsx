@@ -1,11 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 
-export const DestinationOptionsContext = React.createContext();
+export interface DestinationOptions {
+    data: string[];
+    isLoading: boolean;
+    error: string | null;
+}
 
-export function DestinationOptions({ children }) {
-    const [data, setData] = useState(null);
+export const DestinationOptionsContext = React.createContext({
+    data: [],
+    isLoading: false,
+    error: null
+} as DestinationOptions);
+
+export function DestinationOptions({ children }: { children: ReactNode }) {
+    const [data, setData] = useState([] as string[]);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(null as (string | null));
 
     useEffect(() => {
         async function fetchData() {

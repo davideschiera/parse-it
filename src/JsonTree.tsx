@@ -1,6 +1,15 @@
 import React from 'react';
+import './JsonTree.css';
 
-export function JsonTree({ data, onSelect }) {
+export function JsonTree({
+    data,
+    parent,
+    onSelect
+}: {
+    data: any;
+    parent?: string;
+    onSelect: (value: string) => void;
+}) {
     if (data) {
         const keys = Object.keys(data);
 
@@ -16,7 +25,7 @@ export function JsonTree({ data, onSelect }) {
     }
 }
 
-function JsonElement({ data, dataKey, onSelect }) {
+function JsonElement({ data, dataKey, onSelect }: { data: any; dataKey: string; onSelect: (value: string) => void }) {
     const datum = data[dataKey];
     let face;
     let keys;

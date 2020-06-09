@@ -1,0 +1,4 @@
+section.is-dragging * {
+    /* disable interactions with all children, so that overing them will *not* trigger drag leave/enter events */
+    pointer-events: none;
+}

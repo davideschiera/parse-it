@@ -1,4 +1,15 @@
-export async function submitParser(data, parameters, parser) {
+import { ImportedData } from '../ImportData';
+import { Parameter } from '../ParametersConfiguration';
+
+export async function submitParser({
+    data,
+    parameters,
+    parser
+}: {
+    data: ImportedData;
+    parameters: Parameter[];
+    parser: string;
+}) {
     // send data + parser to API
     const response = await fetch('/api/submit', {
         method: 'POST',

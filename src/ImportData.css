@@ -1,0 +1,23 @@
+.drag-drop-placeholder {
+    /* let pointer interactions to go through to let clicking the elements below */
+    pointer-events: none;
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    transition: opacity ease-in-out 0.1s;
+
+    background-color: lightgray;
+    border: 2px solid gray;
+}
+
+.drag-drop-placeholder.drag-drop-placeholder--dragging {
+    opacity: 1;
+}

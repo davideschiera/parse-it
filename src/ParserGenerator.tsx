@@ -3,47 +3,63 @@ import { FormSection } from './FormSection';
 import { createParser } from './parser/createParser';
 import { submitParser } from './parser/submitParser';
 import { verifyParser } from './parser/verifyParser';
+import { ImportedData } from './ImportData';
+import { Parameter } from './ParametersConfiguration';
 
-export function ParserGenerator({ data, parameters }) {
-    const [parser, setParser] = useState(null);
+export function ParserGenerator({ data, parameters }: { data: ImportedData | null; parameters: Parameter[] }) {
+    const [parser, setParser] = useState(null as (string | null));
     const linkRef = useRef();
     const canGenerate = data !== null && parameters.length > 0;
     const canVerify = data !== null && parameters.length > 0 && parser !== null;
     const canDownload = canVerify;
     const canSubmit = canVerify;
 
-    function generate(event) {
+    function generate(event: React.MouseEvent) {
         event.preventDefault();
 
-        try {
-            setParser(createParser(data, parameters));
-        } catch (exception) {}
+        if (data) {
+            try {
+                setParser(createParser(parameters));
+            } catch (exception) {}
+        }
     }
 
-    async function verify(event) {
+    async function verify(event: React.MouseEvent) {
         event.preventDefault();
 
-        try {
-            await verifyParser(data, parameters, parser);
-        } catch (exception) {}
+        if (data && parser) {
+            try {
+                await verifyParser({ data, parameters, parser });
+            } catch (exception) {}
+        }
     }
 
-    async function submit(event) {
+    async function submit(event: React.MouseEvent) {
         event.preventDefault();
 
-        try {
-            await submitParser(data, parameters, parser);
-        } catch (exception) {}
+        if (data && parser) {
+            try {
+                await submitParser({ data, parameters, parser });
+            } catch (exception) {}
+        }
     }
 
-    function download(event) {
+    function download(event: React.MouseEvent) {
         event.preventDefault();
 
-        const url = window.URL.createObjectURL(new Blob([parser], { type: 'application/javascript' }));
-        linkRef.current.href = url;
-        linkRef.current.download = 'parser.js';
-        linkRef.current.click();
-        window.URL.revokeObjectURL(url);
+        if (parser) {
+            const url = window.URL.createObjectURL(new Blob([parser], { type: 'application/javascript' }));
+            linkRef.current.href = url;
+            linkRef.current.download = 'parser.js';
+            linkRef.current.click();
+            window.URL.revokeObjectURL(url);
+        }
+    }
+
+    function onParserChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+        event.preventDefault();
+
+        setParser(event.target.value);
     }
 
     return (
@@ -56,7 +72,12 @@ export function ParserGenerator({ data, parameters }) {
                     Generate
                 </button>
 
-                <textarea readOnly value={parser || ''} disabled={parser === null} />
+                <textarea
+                    value={parser || ''}
+                    disabled={parser === null}
+                    onChange={onParserChange}
+                    style={{ minHeight: '110px' }}
+                />
 
                 <button type="button" onClick={verify} disabled={canVerify === false}>
                     Verify

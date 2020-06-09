@@ -1,0 +1,13 @@
+.TextList {
+    list-style: none;
+    margin: 0;
+    padding-inline-start: 0;
+}
+
+.JsonTree {
+    list-style: none;
+    margin: 0;
+    padding-inline-start: 0;
+
+    overflow: hidden;
+}

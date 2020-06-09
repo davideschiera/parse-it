@@ -1,0 +1,39 @@
+.ParameterConfiguration__Fieldset {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 80px;
+    align-items: flex-start;
+    grid-gap: 20px;
+}
+.ParameterConfiguration__MappingFieldset {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: flex-start;
+    grid-gap: 10px;
+}
+
+.SuggestiveInput {
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    grid-template-areas:
+        'input button'
+        'suggestions suggestions';
+}
+.SuggestiveInput__Suggestions {
+    grid-area: suggestions;
+
+    display: none;
+
+    height: 140px;
+    width: 50vw;
+
+    overflow: auto;
+
+    border: 1px solid black;
+}
+.SuggestiveInput__Suggestions--IsExpanded {
+    display: block;
+}
+
+button.SuggestiveInput {
+    text-align: center;
+}
