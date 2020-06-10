@@ -84,6 +84,15 @@ export function ImportData({ data, setData }: { data: ImportedData | null; setDa
 
                 <button onClick={selectLocalFile}>Upload</button>
 
+                {data ? (
+                    <p>
+                        <span role="img" aria-label="Import succeeded">
+                            ✅
+                        </span>{' '}
+                        Loaded!
+                    </p>
+                ) : null}
+
                 {error ? (
                     <p>
                         <span role="img" aria-label="Import error">
